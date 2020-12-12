@@ -3,7 +3,6 @@ package server
 import (
 	"crypto/tls"
 	"errors"
-	"github.com/go-redis/redis"
 	"math/rand"
 	"ngrok/conn"
 	"ngrok/log"
@@ -12,14 +11,19 @@ import (
 	"os"
 	"runtime/debug"
 	"time"
+
+	"github.com/go-redis/redis"
 )
 
 const (
-	registryCacheSize uint64 = 1024 * 1024 // 1 MB
-	connReadTimeout          = 12 * time.Second
-	redisUserList     string = "ngrok_user_list"
-	redisAuthKey      string = "X-With-Auth"
-	redisMsgKey       string = "ngrok_msg_list"
+	registryCacheSize   uint64        = 1024 * 1024 // 1 MB
+	connReadTimeout                   = 12 * time.Second
+	redisUserList       string        = "Ngrok-User-List"
+	redisAuthHeader     string        = "Admin-Authorization"
+	redisAccessToken    string        = "Admin-Access-token"
+	redisRefreshToken   string        = "Admin-refresh-token"
+	redisAccessExpired  time.Duration = 2 * time.Hour
+	redisReflashExpired time.Duration = 48 * time.Hour
 )
 
 // GLOBALS
