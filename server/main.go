@@ -163,6 +163,24 @@ func Main() {
 
 	if opts.redisAddr != "" {
 		client = redis.NewClient(&redis.Options{Addr: opts.redisAddr, Password: opts.redisPwd})
+		poolstats := client.PoolStats()
+		log.Info("总连接数=%d,空闲连接数=%d,已经移除的连接数=%d\n",
+			poolstats.TotalConns,
+			poolstats.IdleConns,
+			poolstats.StaleConns)
+
+		//可连接性检测
+		_, err := client.Ping().Result()
+		if err != nil {
+			log.Info("%v\n", err)
+			return
+		}
+
+		poolstats = client.PoolStats()
+		log.Info("总连接数=%d,空闲连接数=%d,已经移除的连接数=%d\n",
+			poolstats.TotalConns,
+			poolstats.IdleConns,
+			poolstats.StaleConns)
 		log.Info("Add redis %s token type, abandon proxy", opts.redisAddr)
 		go start()
 	}
