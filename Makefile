@@ -9,7 +9,7 @@ go-bindata = $(GOPATH)/bin
 BUILD_ENV := CGO_ENABLED=0
 
 $(go-bindata)/go-bindata:
-	go get -d github.com/jteeuwen/go-bindata/...
+	go get -u github.com/jteeuwen/go-bindata/...
 
 default: client server
 
