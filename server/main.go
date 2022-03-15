@@ -8,6 +8,7 @@ import (
 	"ngrok/log"
 	"ngrok/msg"
 	"ngrok/util"
+	"ngrok/web"
 	"os"
 	"runtime/debug"
 	"time"
@@ -16,14 +17,8 @@ import (
 )
 
 const (
-	registryCacheSize   uint64        = 1024 * 1024 // 1 MB
-	connReadTimeout                   = 12 * time.Second
-	redisUserList       string        = "Ngrok-User-List"
-	redisAuthHeader     string        = "Admin-Authorization"
-	redisAccessToken    string        = "Admin-Access-token"
-	redisRefreshToken   string        = "Admin-refresh-token"
-	redisAccessExpired  time.Duration = 2 * time.Hour
-	redisReflashExpired time.Duration = 48 * time.Hour
+	registryCacheSize uint64 = 1024 * 1024 // 1 MB
+	connReadTimeout          = 12 * time.Second
 )
 
 // GLOBALS
@@ -64,7 +59,7 @@ func CheckAuth(auth string) (string, error) {
 	if client == nil {
 		return "", nil
 	}
-	res := client.HMGet(redisUserList, auth).Val()
+	res := client.HMGet(util.RedisUserList, auth).Val()
 	if len(res) != 1 {
 		return "", errors.New("auth token string error")
 	}
@@ -123,6 +118,29 @@ func tunnelListener(addr string, tlsConfig *tls.Config) {
 	}
 }
 
+func LoadRedis(redisAddr, redisPwd string) {
+	client = redis.NewClient(&redis.Options{Addr: redisAddr, Password: redisPwd})
+	poolstats := client.PoolStats()
+	log.Info("总连接数=%d,空闲连接数=%d,已经移除的连接数=%d\n",
+		poolstats.TotalConns,
+		poolstats.IdleConns,
+		poolstats.StaleConns)
+
+	//可连接性检测
+	_, err := client.Ping().Result()
+	if err != nil {
+		log.Info("%v\n", err)
+		return
+	}
+
+	poolstats = client.PoolStats()
+	log.Info("总连接数=%d,空闲连接数=%d,已经移除的连接数=%d\n",
+		poolstats.TotalConns,
+		poolstats.IdleConns,
+		poolstats.StaleConns)
+	log.Info("Add redis %s token type, abandon proxy", opts.redisAddr)
+}
+
 func Main() {
 	// parse options
 	opts = parseArgs()
@@ -162,27 +180,8 @@ func Main() {
 	}
 
 	if opts.redisAddr != "" {
-		client = redis.NewClient(&redis.Options{Addr: opts.redisAddr, Password: opts.redisPwd})
-		poolstats := client.PoolStats()
-		log.Info("总连接数=%d,空闲连接数=%d,已经移除的连接数=%d\n",
-			poolstats.TotalConns,
-			poolstats.IdleConns,
-			poolstats.StaleConns)
-
-		//可连接性检测
-		_, err := client.Ping().Result()
-		if err != nil {
-			log.Info("%v\n", err)
-			return
-		}
-
-		poolstats = client.PoolStats()
-		log.Info("总连接数=%d,空闲连接数=%d,已经移除的连接数=%d\n",
-			poolstats.TotalConns,
-			poolstats.IdleConns,
-			poolstats.StaleConns)
-		log.Info("Add redis %s token type, abandon proxy", opts.redisAddr)
-		go start()
+		LoadRedis(opts.redisAddr, opts.redisPwd)
+		go web.Start(client)
 	}
 
 	// ngrok clients
