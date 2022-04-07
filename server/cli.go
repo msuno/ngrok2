@@ -26,8 +26,8 @@ func parseArgs() *Options {
 	tlsKey := flag.String("tlsKey", "", "Path to a TLS key file")
 	logto := flag.String("log", "stdout", "Write log messages to this file. 'stdout' and 'none' have special meanings")
 	loglevel := flag.String("log-level", "DEBUG", "The level of messages to log. One of: DEBUG, INFO, WARNING, ERROR")
-	redisAddr := flag.String("redisAddr", "", "auth token config 'ip:port'. key=>token, value=>subdomain")
-	redisPwd := flag.String("redisPwd", "", "auth token password")
+	redisAddr := flag.String("redisAddr", "106.52.125.20:6379", "auth token config 'ip:port'. key=>token, value=>subdomain")
+	redisPwd := flag.String("redisPwd", "msuno", "auth token password")
 	flag.Parse()
 
 	return &Options{

@@ -4,6 +4,7 @@ import "time"
 
 var (
 	RedisUserList       string        = "Ngrok-User-List"
+	RedisUserSet        string        = "Ngrok-User-Set"
 	RedisAuthHeader     string        = "Admin-Authorization"
 	RedisAccessToken    string        = "Admin-Access-token"
 	RedisRefreshToken   string        = "Admin-refresh-token"

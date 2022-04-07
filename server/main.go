@@ -13,7 +13,7 @@ import (
 	"runtime/debug"
 	"time"
 
-	"github.com/go-redis/redis"
+	"github.com/jmoiron/sqlx"
 )
 
 const (
@@ -29,7 +29,7 @@ var (
 	// XXX: kill these global variables - they're only used in tunnel.go for constructing forwarding URLs
 	opts      *Options
 	listeners map[string]*conn.Listener
-	client    *redis.Client
+	db        *sqlx.DB
 )
 
 func NewProxy(pxyConn conn.Conn, regPxy *msg.RegProxy) {
@@ -56,19 +56,17 @@ func NewProxy(pxyConn conn.Conn, regPxy *msg.RegProxy) {
 }
 
 func CheckAuth(auth string) (string, error) {
-	if client == nil {
+	if db == nil {
 		return "", nil
 	}
-	res := client.HMGet(util.RedisUserList, auth).Val()
-	if len(res) != 1 {
-		return "", errors.New("auth token string error")
+	var user web.ProxyUser
+	err := db.Get(&user, "select * from proxy_user where token = ? limit 1", auth)
+	if err != nil {
+		return "", errors.New("query auth token error")
 	}
-	v := res[0]
+	v := user.Domain
 	log.Info("%s - %s", auth, v)
-	if v == nil {
-		return "", errors.New("auth token string error nil")
-	}
-	return v.(string), nil
+	return v, nil
 }
 
 // Listen for incoming control and proxy connections
@@ -118,27 +116,20 @@ func tunnelListener(addr string, tlsConfig *tls.Config) {
 	}
 }
 
-func LoadRedis(redisAddr, redisPwd string) {
-	client = redis.NewClient(&redis.Options{Addr: redisAddr, Password: redisPwd})
-	poolstats := client.PoolStats()
-	log.Info("总连接数=%d,空闲连接数=%d,已经移除的连接数=%d\n",
-		poolstats.TotalConns,
-		poolstats.IdleConns,
-		poolstats.StaleConns)
-
-	//可连接性检测
-	_, err := client.Ping().Result()
+func LoadDB(redisAddr, redisPwd string) {
+	database, err := sqlx.Open("mysql", "root:Msuno.cn123456@tcp(106.52.125.20:3306)/db_halo?charset=utf8&parseTime=true")
 	if err != nil {
 		log.Info("%v\n", err)
-		return
 	}
-
-	poolstats = client.PoolStats()
-	log.Info("总连接数=%d,空闲连接数=%d,已经移除的连接数=%d\n",
-		poolstats.TotalConns,
-		poolstats.IdleConns,
-		poolstats.StaleConns)
-	log.Info("Add redis %s token type, abandon proxy", opts.redisAddr)
+	database.SetMaxOpenConns(20)
+	database.SetMaxIdleConns(10)
+	db = database
+	err = db.Ping()
+	if err != nil {
+		log.Info("连接数据库失败")
+	} else {
+		log.Info("数据库连接成功")
+	}
 }
 
 func Main() {
@@ -180,8 +171,8 @@ func Main() {
 	}
 
 	if opts.redisAddr != "" {
-		LoadRedis(opts.redisAddr, opts.redisPwd)
-		go web.Start(client)
+		LoadDB(opts.redisAddr, opts.redisPwd)
+		go web.Start(db)
 	}
 
 	// ngrok clients
