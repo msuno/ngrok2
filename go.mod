@@ -21,12 +21,12 @@ require (
 
 require (
 	github.com/go-ole/go-ole v1.2.6 // indirect
-	github.com/go-sql-driver/mysql v1.6.0 // indirect
-	github.com/jmoiron/sqlx v1.3.4 // indirect
+	github.com/go-sql-driver/mysql v1.6.0
+	github.com/jmoiron/sqlx v1.3.4
 	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.11 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
-	github.com/shirou/gopsutil v2.21.11+incompatible // indirect
+	github.com/shirou/gopsutil v2.21.11+incompatible
 	github.com/tklauser/go-sysconf v0.3.10 // indirect
 	github.com/tklauser/numcpus v0.4.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
@@ -37,3 +37,5 @@ require (
 	golang.org/x/sys v0.0.0-20220128215802-99c3d69c2c27 // indirect
 	golang.org/x/text v0.3.6 // indirect
 )
+
+require github.com/jteeuwen/go-bindata v3.0.7+incompatible // indirect

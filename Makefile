@@ -1,17 +1,13 @@
 .PHONY: default
-# export GOPATH:=$(shell pwd)
 
-ifndef $(GOAPTH)
-GOPATH = $(HOME)/go
-endif
 
 go-bindata = $(GOPATH)/bin
 BUILD_ENV := CGO_ENABLED=0
 
 $(go-bindata)/go-bindata:
-	go get -u github.com/jteeuwen/go-bindata/...
+	go install -a github.com/jteeuwen/go-bindata/...@latest
 
-default: client server
+default: start client server end
 
 deps: assets
 	go mod download
@@ -56,9 +52,11 @@ build-darwin-386:
 	${BUILD_ENV} GOARCH=386 GOOS=darwin go build -o darwin-386/ngrok ./main/ngrok
 	${BUILD_ENV} GOARCH=386 GOOS=darwin go build -o darwin-386/ngrokd ./main/ngrokd
 
-ifneq ($(MAKECMDGOALS),)
-	echo 'sdf'
-endif
+start:
+	@echo '开始编译，环境变量GOPATH地址为：'$(GOPATH)
+
+end:
+	$(info 编译结束, bin目录$(GOPATH)/bin)
 
 clean:
 	rm $(go-bindata)/go-bindata ngrok ngrokd server/assets client/assets -rf
