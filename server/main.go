@@ -60,7 +60,7 @@ func CheckAuth(auth string) (string, error) {
 		return "", nil
 	}
 	var user web.ProxyUser
-	err := db.Get(&user, "select * from proxy_user where sk = ? limit 1", auth)
+	err := db.Get(&user, "select * from ngrok_user where sk = ? limit 1", auth)
 	if err != nil {
 		return "", errors.New("query auth token error" + err.Error())
 	}
