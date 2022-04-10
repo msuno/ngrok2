@@ -4,7 +4,6 @@ go 1.17
 
 require (
 	github.com/alecthomas/log4go v0.0.0-20180109082532-d146e6b86faa
-	github.com/go-redis/redis v6.15.7+incompatible
 	github.com/gorilla/websocket v1.4.2
 	github.com/inconshreveable/go-vhost v0.0.0-20160627193104-06d84117953b
 	github.com/inconshreveable/mousetrap v1.0.0

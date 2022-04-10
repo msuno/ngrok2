@@ -116,8 +116,8 @@ func tunnelListener(addr string, tlsConfig *tls.Config) {
 	}
 }
 
-func LoadDB(redisAddr, redisPwd string) {
-	database, err := sqlx.Open("mysql", "root:Msuno.cn123456@tcp(106.52.125.20:3306)/db_halo?charset=utf8&parseTime=true")
+func LoadDB(url string) {
+	database, err := sqlx.Open("mysql", url)
 	if err != nil {
 		log.Info("%v\n", err)
 	}
@@ -170,9 +170,9 @@ func Main() {
 		listeners["https"] = startHttpListener(opts.httpsAddr, tlsConfig)
 	}
 
-	if opts.redisAddr != "" {
-		LoadDB(opts.redisAddr, opts.redisPwd)
-		go web.Start(db)
+	if opts.url != "" {
+		LoadDB(opts.url)
+		go web.Start(db, opts.port)
 	}
 
 	// ngrok clients

@@ -61,7 +61,7 @@ func (r *RContext) Fail(code int, str interface{}) error {
 	return r.JSON(http.StatusOK, res)
 }
 
-func Start(db *sqlx.DB) {
+func Start(db *sqlx.DB, port string) {
 	go readInfo(db)
 	e := echo.New()
 	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
@@ -80,7 +80,7 @@ func Start(db *sqlx.DB) {
 	e.GET("/api/admin/user/list", userList)
 	e.POST("/api/admin/user/add", userAdd)
 	e.DELETE("/api/admin/user/del", userDel)
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(port))
 }
 
 func readInfo(db *sqlx.DB) {

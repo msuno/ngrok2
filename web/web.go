@@ -38,7 +38,7 @@ func userList(c echo.Context) error {
 	}
 	start, err := strconv.ParseInt(cc.QueryParam("start"), 10, 64)
 	if err != nil {
-		start = time.Now().AddDate(0, 0, -7).UnixMilli()
+		start = time.Now().AddDate(-1, 0, 0).UnixMilli()
 	}
 	end, err := strconv.ParseInt(cc.QueryParam("end"), 10, 64)
 	if err != nil {

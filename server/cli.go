@@ -13,8 +13,8 @@ type Options struct {
 	tlsKey     string
 	logto      string
 	loglevel   string
-	redisAddr  string
-	redisPwd   string
+	url        string
+	port       string
 }
 
 func parseArgs() *Options {
@@ -26,8 +26,8 @@ func parseArgs() *Options {
 	tlsKey := flag.String("tlsKey", "", "Path to a TLS key file")
 	logto := flag.String("log", "stdout", "Write log messages to this file. 'stdout' and 'none' have special meanings")
 	loglevel := flag.String("log-level", "DEBUG", "The level of messages to log. One of: DEBUG, INFO, WARNING, ERROR")
-	redisAddr := flag.String("redisAddr", "106.52.125.20:6379", "auth token config 'ip:port'. key=>token, value=>subdomain")
-	redisPwd := flag.String("redisPwd", "msuno", "auth token password")
+	url := flag.String("url", "", "user:password@tcp(ip:port)/db")
+	port := flag.String("port", ":8888", "web admin port")
 	flag.Parse()
 
 	return &Options{
@@ -39,7 +39,7 @@ func parseArgs() *Options {
 		tlsKey:     *tlsKey,
 		logto:      *logto,
 		loglevel:   *loglevel,
-		redisAddr:  *redisAddr,
-		redisPwd:   *redisPwd,
+		url:        *url,
+		port:       *port,
 	}
 }
