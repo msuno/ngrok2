@@ -26,7 +26,7 @@ client-assets: $(go-bindata)/go-bindata
 server-assets: $(go-bindata)/go-bindata
 	$(go-bindata)/go-bindata -pkg=assets -o=server/assets/assets.go assets/server/...
 
-all: build-windows-amd64 build-windows-386 build-linux-amd64 build-linux-386 build-darwin-amd64 build-darwin-386
+all: start deps build-windows-amd64 build-windows-386 build-linux-amd64 build-linux-386 build-darwin-amd64 end
 
 build-windows-amd64:
 	${BUILD_ENV} GOARCH=amd64 GOOS=windows go build -o windows-amd64/ngrokd.exe ./main/ngrokd
@@ -59,4 +59,4 @@ end:
 	$(info 编译结束, bin目录$(GOPATH)/bin)
 
 clean:
-	rm $(go-bindata)/go-bindata ngrok ngrokd server/assets client/assets -rf
+	rm $(go-bindata)/go-bindata ngrok ngrokd server/assets client/assets linux-* windows-* darwin-* -rf
