@@ -78,8 +78,10 @@ func Start(db *sqlx.DB, port string) {
 	e.GET("/api/admin/user", getUser)
 	e.GET("/api/admin/system/info", sysInfo)
 	e.GET("/api/admin/user/list", userList)
-	e.POST("/api/admin/user/add", userAdd)
+	e.POST("/api/admin/user/edit", userEdit)
 	e.DELETE("/api/admin/user/del", userDel)
+	e.GET("/api/admin/wechat", getWeChat)
+	e.POST("/api/admin/wechat", postWeChat)
 	e.Logger.Fatal(e.Start(port))
 }
 
