@@ -14,18 +14,22 @@ import (
 
 func login(c echo.Context) error {
 	cc := c.(*RContext)
+	m := cc.BodyForm()
+	i := m["username"]
+	var u User
+	err := cc.db.Get(&u, "select * from users where email = ?", i)
+	if err != nil {
+		return cc.Fail(401, "email error")
+	}
 	access_token := util.RandId(16)
-	refresh_token := util.RandId(16)
-	res := make(map[string]interface{})
-	res["access_token"] = access_token
-	res["refresh_token"] = refresh_token
-	res["expired_in"] = util.RedisAccessExpired.Seconds()
-	return cc.Ok(res)
+	cache["access_token"] = access_token
+	return cc.Ok(cache)
 }
 
 func logout(c echo.Context) error {
 	cc := c.(*RContext)
-	return cc.Ok("")
+	delete(cache, "access_token")
+	return cc.Ok(cache)
 }
 
 func userList(c echo.Context) error {

@@ -61,15 +61,22 @@ func (r *RContext) Fail(code int, str interface{}) error {
 	return r.JSON(http.StatusOK, res)
 }
 
+var cache = make(map[string]interface{})
+
 func Start(db *sqlx.DB, port string) {
 	go readInfo(db)
 	e := echo.New()
 	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			return h(&RContext{
+			rc := &RContext{
 				c,
 				db,
-			})
+			}
+			s := rc.Request().RequestURI
+			if "/api/admin/login" != s && c.Request().Header.Get("Access-Token") != cache["access_token"] {
+				return rc.Fail(401, "Access Forbidden")
+			}
+			return h(rc)
 		}
 	})
 	e.POST("/api/admin/login", login)
