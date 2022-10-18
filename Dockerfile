@@ -1,6 +1,6 @@
 FROM alpine:3.5
 
-MAINTAINER The Ngrok Project <msuno@msuno.cn>
+LABEL maintainer The Ngrok Project <msuno@msuno.cn>
 
 EXPOSE 80 443 4443 8000
 

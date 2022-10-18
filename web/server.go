@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"ngrok/log"
+	"strings"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -61,19 +62,16 @@ func (r *RContext) Fail(code int, str interface{}) error {
 	return r.JSON(http.StatusOK, res)
 }
 
-var cache = make(map[string]interface{})
+var cache = make(map[string]string)
 
 func Start(db *sqlx.DB, port string) {
 	go readInfo(db)
 	e := echo.New()
 	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			rc := &RContext{
-				c,
-				db,
-			}
+			rc := &RContext{c, db}
 			s := rc.Request().RequestURI
-			if "/api/admin/login" != s && c.Request().Header.Get("Access-Token") != cache["access_token"] {
+			if !strings.EqualFold("/api/admin/login", s) && !strings.EqualFold(c.Request().Header.Get("Access-Token"), cache["access_token"]) {
 				return rc.Fail(401, "Access Forbidden")
 			}
 			return h(rc)

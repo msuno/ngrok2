@@ -27,7 +27,7 @@ func parseArgs() *Options {
 	logto := flag.String("log", "stdout", "Write log messages to this file. 'stdout' and 'none' have special meanings")
 	loglevel := flag.String("log-level", "DEBUG", "The level of messages to log. One of: DEBUG, INFO, WARNING, ERROR")
 	url := flag.String("url", "", "user:password@tcp(ip:port)/db")
-	port := flag.String("port", ":8888", "web admin port")
+	port := flag.String("port", ":1323", "web admin port")
 	flag.Parse()
 
 	return &Options{
