@@ -1,7 +1,6 @@
 package web
 
 import (
-	"encoding/json"
 	"encoding/xml"
 	"net/http"
 	"ngrok/log"
@@ -116,10 +115,12 @@ func getUser(c echo.Context) error {
 
 func menuList(c echo.Context) error {
 	cc := c.(*RContext)
-	var maps [2]map[string]interface{}
-	str := `[{"id":1,"parentId":0,"name":"ProxyUser","path":"/ProxyUser","component":"Layout","redirect":"/ProxyUser/Directive","meta":{"title":"代理用户","icon":"el-icon-phone"}},{"id":10,"parentId":1,"name":"ProxyUser","path":"/ProxyUser/ProxyUser","component":"ProxyUser","meta":{"title":"用户管理","icon":"el-icon-goods"}}]`
-	json.Unmarshal([]byte(str), &maps)
-	return cc.Ok(maps)
+	var list []MenuInfo
+	err := cc.db.Select(&list, "select * from menu_info order by id desc")
+	if err != nil {
+		panic(err)
+	}
+	return cc.Ok(list)
 }
 
 func getWeChat(c echo.Context) error {

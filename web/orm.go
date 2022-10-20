@@ -1,6 +1,8 @@
 package web
 
 import (
+	"database/sql/driver"
+	"encoding/json"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -50,4 +52,28 @@ type ProxyUser struct {
 	Sk         string    `json:"sk" db:"sk"`
 	CreateTime time.Time `json:"create_time" db:"create_time"`
 	UpdateTime time.Time `json:"update_time" db:"update_time"`
+}
+
+type MenuInfo struct {
+	Id         int64     `json:"id" db:"id"`
+	ParentId   string    `json:"parentId" db:"parent_id"`
+	Name       string    `json:"name" db:"name"`
+	Path       string    `json:"path" db:"path"`
+	Component  string    `json:"component" db:"component"`
+	Redirect   string    `json:"redirect" db:"redirect"`
+	Meta       Meta      `json:"meta" db:"meta" type:"json"`
+	CreateTime time.Time `json:"createTime" db:"create_time"`
+}
+
+type Meta struct {
+	Title string `json:"title" db:"title"`
+	Icon  string `json:"icon" db:"icon"`
+}
+
+func (t *Meta) Scan(val interface{}) error {
+	return json.Unmarshal(val.([]byte), &t)
+}
+
+func (t *Meta) Value() (driver.Value, error) {
+	return json.Marshal(t)
 }

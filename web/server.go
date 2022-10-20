@@ -162,5 +162,7 @@ func readInfo(db *sqlx.DB) {
 		if err != nil {
 			log.Info("%v", err.Error())
 		}
+		sys.CreateTime = sys.CreateTime.Add(-240 * time.Hour)
+		db.NamedExec("delete from `system_info` where `create_time` <= :create_time", sys)
 	}
 }

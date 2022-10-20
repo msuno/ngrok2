@@ -21,7 +21,8 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL DEFAULT '',
   `username` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-);
+) DEFAULT CHARSET UTF8 COMMENT '管理用户信息';
+
 
 CREATE TABLE `system_info` (
   `id` int(11) AUTO_INCREMENT NOT NULL COMMENT '主键',
@@ -35,4 +36,17 @@ CREATE TABLE `system_info` (
   `pid` decimal(18,2) NOT NULL DEFAULT '0.00',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-);
+) DEFAULT CHARSET UTF8 COMMENT '系统使用情况';
+
+
+CREATE TABLE `menu_info` (
+  `id` int(11) AUTO_INCREMENT NOT NULL COMMENT '主键',
+  `parent_id` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `path` varchar(255) NOT NULL DEFAULT '',
+  `component` varchar(100) NOT NULL DEFAULT '',
+  `redirect` varchar(100) NOT NULL DEFAULT '',
+  `meta` json NOT NULL,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET UTF8 COMMENT '系统菜单'

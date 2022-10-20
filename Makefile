@@ -1,6 +1,5 @@
 .PHONY: default
 
-
 go-bindata = $(GOPATH)/bin
 BUILD_ENV := CGO_ENABLED=0
 
