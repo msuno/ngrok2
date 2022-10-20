@@ -1,8 +1,6 @@
 package main
 
-import (
-	"ngrok/server"
-)
+import "ngrok/server"
 
 func main() {
 	server.Main()

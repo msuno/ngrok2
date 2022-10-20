@@ -82,7 +82,7 @@ func (r *TunnelRegistry) Register(url string, t *Tunnel) error {
 	defer r.Unlock()
 
 	if r.tunnels[url] != nil {
-		return fmt.Errorf("The tunnel %s is already registered.", url)
+		return fmt.Errorf("the tunnel %s is already registered", url)
 	}
 
 	r.tunnels[url] = t
@@ -145,7 +145,7 @@ func (r *TunnelRegistry) RegisterRepeat(urlFn func() string, t *Tunnel) (string,
 		}
 	}
 
-	return "", fmt.Errorf("Failed to assign a URL after %d attempts!", maxAttempts)
+	return "", fmt.Errorf("failed to assign a URL after %d attempts", maxAttempts)
 }
 
 func (r *TunnelRegistry) Del(url string) {
@@ -198,7 +198,7 @@ func (r *ControlRegistry) Del(clientId string) error {
 	r.Lock()
 	defer r.Unlock()
 	if r.controls[clientId] == nil {
-		return fmt.Errorf("No control found for client id: %s", clientId)
+		return fmt.Errorf("no control found for client id: %s", clientId)
 	} else {
 		r.Info("Removed control registry id %s", clientId)
 		delete(r.controls, clientId)

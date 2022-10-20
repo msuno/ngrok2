@@ -59,13 +59,11 @@ func registerVhost(t *Tunnel, protocol string, servingPort int) (err error) {
 	// Canonicalize virtual host by removing default port (e.g. :80 on HTTP)
 	defaultPort, ok := defaultPortMap[protocol]
 	if !ok {
-		return fmt.Errorf("Couldn't find default port for protocol %s", protocol)
+		return fmt.Errorf("couldn't find default port for protocol %s", protocol)
 	}
 
 	defaultPortSuffix := fmt.Sprintf(":%d", defaultPort)
-	if strings.HasSuffix(vhost, defaultPortSuffix) {
-		vhost = vhost[0 : len(vhost)-len(defaultPortSuffix)]
-	}
+	vhost = strings.TrimSuffix(vhost, defaultPortSuffix)
 
 	// Canonicalize by always using lower-case
 	vhost = strings.ToLower(vhost)
@@ -161,7 +159,7 @@ func NewTunnel(m *msg.ReqTunnel, ctl *Control) (t *Tunnel, err error) {
 	case "http", "https":
 		l, ok := listeners[proto]
 		if !ok {
-			err = fmt.Errorf("Not listening for %s connections", proto)
+			err = fmt.Errorf("not listening for %s connections", proto)
 			return
 		}
 
@@ -170,7 +168,7 @@ func NewTunnel(m *msg.ReqTunnel, ctl *Control) (t *Tunnel, err error) {
 		}
 
 	default:
-		err = fmt.Errorf("Protocol %s is not supported", proto)
+		err = fmt.Errorf("protocol %s is not supported", proto)
 		return
 	}
 
@@ -282,7 +280,6 @@ func (t *Tunnel) HandlePublicConnection(publicConn conn.Conn) {
 
 	metrics.CloseConnection(t, publicConn, startTime, bytesIn, bytesOut)
 }
-
 
 func (t *Tunnel) GetWorkConnFromPool(dstAddr string) (proxyConn conn.Conn, err error) {
 

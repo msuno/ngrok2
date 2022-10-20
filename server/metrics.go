@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	gometrics "github.com/rcrowley/go-metrics"
 	"io/ioutil"
 	"net/http"
 	"ngrok/conn"
 	"ngrok/log"
 	"os"
 	"time"
+
+	gometrics "github.com/rcrowley/go-metrics"
 )
 
 var metrics Metrics
@@ -32,7 +33,6 @@ type Metrics interface {
 	OpenTunnel(*Tunnel)
 	CloseTunnel(*Tunnel)
 	Msg() ([]byte, error)
-
 }
 
 type LocalMetrics struct {
@@ -214,7 +214,7 @@ func NewKeenIoMetrics(batchInterval time.Duration) *KeenIoMetrics {
 		}()
 
 		batch := make(map[string][]interface{})
-		batchTimer := time.Tick(batchInterval)
+		batchTimer := time.NewTicker(batchInterval)
 
 		for {
 			select {
@@ -225,7 +225,7 @@ func NewKeenIoMetrics(batchInterval time.Duration) *KeenIoMetrics {
 				}
 				batch[m.Collection] = append(list, m.Event)
 
-			case <-batchTimer:
+			case <-batchTimer.C:
 				// no metrics to report
 				if len(batch) == 0 {
 					continue
