@@ -172,6 +172,8 @@ func postWeChat(c echo.Context) error {
 		panic(err)
 	}
 
+	log.Info(fmt.Sprintf("%v", a))
+
 	var rs RespMsg
 	rs.Content = a.Content
 	rs.ToUserName = a.FromUserName
