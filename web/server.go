@@ -64,6 +64,8 @@ func (r *RContext) Fail(code int, str interface{}) error {
 
 var cache = make(map[string]string)
 
+var excludeUrl map[string]bool = map[string]bool{"/api/admin/login": true, "/api/admin/wechat": true}
+
 func Start(db *sqlx.DB, port string) {
 	go readInfo(db)
 	e := echo.New()
@@ -71,7 +73,8 @@ func Start(db *sqlx.DB, port string) {
 		return func(c echo.Context) error {
 			rc := &RContext{c, db}
 			s := rc.Request().RequestURI
-			if !strings.EqualFold("/api/admin/login", s) && !strings.EqualFold(c.Request().Header.Get("Access-Token"), cache["access_token"]) {
+			_, ok := excludeUrl[s]
+			if !ok && !strings.EqualFold(c.Request().Header.Get("Access-Token"), cache["access_token"]) {
 				return rc.Fail(401, "Access Forbidden")
 			}
 			return h(rc)

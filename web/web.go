@@ -1,7 +1,9 @@
 package web
 
 import (
+	"crypto/md5"
 	"encoding/xml"
+	"fmt"
 	"net/http"
 	"ngrok/log"
 	"ngrok/util"
@@ -15,8 +17,14 @@ func login(c echo.Context) error {
 	cc := c.(*RContext)
 	m := cc.BodyForm()
 	i := m["username"]
+	p := m["password"]
+	pp, ok := p.(string)
+	if !ok {
+		return cc.Fail(401, "password is empty")
+	}
+	md5Password := fmt.Sprintf("%x", md5.Sum([]byte(pp)))
 	var u User
-	err := cc.db.Get(&u, "select * from users where email = ?", i)
+	err := cc.db.Get(&u, "select * from users where email = ? and password = ?", i, md5Password)
 	if err != nil {
 		return cc.Fail(401, "email error")
 	}
