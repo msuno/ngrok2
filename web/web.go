@@ -137,7 +137,7 @@ func getWeChat(c echo.Context) error {
 	return cc.String(http.StatusOK, cc.QueryParam("echostr"))
 }
 
-type Msg struct {
+type ReqMsg struct {
 	XMLName      xml.Name `xml:"xml"`
 	ToUserName   string   `xml:"ToUserName"`
 	FromUserName string   `xml:"FromUserName"`
@@ -147,22 +147,38 @@ type Msg struct {
 	MsgId        string   `xml:"MsgId,omitempty"`
 }
 
+type RespMsg struct {
+	XMLName      xml.Name `xml:"xml"`
+	ToUserName   string   `xml:"ToUserName"`
+	FromUserName string   `xml:"FromUserName"`
+	CreateTime   int64    `xml:"CreateTime"`
+	MsgType      string   `xml:"MsgType"`
+	Content      string   `xml:"Content"`
+}
+
 func postWeChat(c echo.Context) error {
 	cc := c.(*RContext)
-	var a Msg
+	var a ReqMsg
 	cc.Bind(&a)
-	formUser := a.FromUserName
-	a.FromUserName = a.ToUserName
-	a.ToUserName = formUser
 
 	var u NgrokUser
-	u.UnionId = formUser
-	u.Sk = formUser
-	u.Domain = formUser
+	u.UnionId = a.FromUserName
+	u.Sk = a.FromUserName
+	u.Domain = a.FromUserName
 	u.CreateTime = time.Now()
 	u.UpdateTime = time.Now()
-	cc.db.NamedExec("insert into `ngrok_user`(`union_id`,`domain`,`sk`, `create_time`, `update_time`) values(:union_id,:domain,:sk,:create_time,:update_time)", u)
+	_, err := cc.db.NamedExec("insert into `ngrok_user`(`union_id`,`domain`,`sk`, `create_time`, `update_time`) values(:union_id,:domain,:sk,:create_time,:update_time)", u)
+	if err != nil {
+		panic(err)
+	}
 
-	by, _ := xml.MarshalIndent(a, " ", " ")
+	var rs RespMsg
+	rs.Content = a.Content
+	rs.ToUserName = a.FromUserName
+	rs.FromUserName = a.ToUserName
+	rs.CreateTime = time.Now().Unix()
+	rs.MsgType = a.MsgType
+
+	by, _ := xml.MarshalIndent(rs, "", "")
 	return cc.String(http.StatusOK, string(by))
 }
