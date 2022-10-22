@@ -167,7 +167,7 @@ func postWeChat(c echo.Context) error {
 	u.Domain = a.FromUserName
 	u.CreateTime = time.Now()
 	u.UpdateTime = time.Now()
-	_, err := cc.db.NamedExec("insert into `ngrok_user`(`union_id`,`domain`,`sk`, `create_time`, `update_time`) values(:union_id,:domain,:sk,:create_time,:update_time)", u)
+	_, err := cc.db.NamedExec("insert ignore into `ngrok_user`(`union_id`,`domain`,`sk`, `create_time`, `update_time`) values(:union_id,:domain,:sk,:create_time,:update_time)", u)
 	if err != nil {
 		panic(err)
 	}
