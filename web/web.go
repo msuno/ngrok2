@@ -8,8 +8,10 @@ import (
 	"ngrok/log"
 	"ngrok/util"
 	"strconv"
+	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo"
 )
 
@@ -163,8 +165,10 @@ func postWeChat(c echo.Context) error {
 
 	var u NgrokUser
 	u.UnionId = a.FromUserName
-	u.Sk = a.FromUserName
-	u.Domain = a.FromUserName
+	u.Sk = strings.ToLower(a.FromUserName)
+	u4 := uuid.New()
+	uuid := []rune(strings.ReplaceAll(u4.String(), "-", ""))
+	u.Domain = string(uuid[0:10])
 	u.CreateTime = time.Now()
 	u.UpdateTime = time.Now()
 	_, err := cc.db.NamedExec("insert ignore into `ngrok_user`(`union_id`,`domain`,`sk`, `create_time`, `update_time`) values(:union_id,:domain,:sk,:create_time,:update_time)", u)
