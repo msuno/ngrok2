@@ -72,7 +72,7 @@ func Start(db *sqlx.DB, port string) {
 	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			rc := &RContext{c, db}
-			s := rc.Request().RequestURI
+			s := rc.Request().URL.Path
 			_, ok := excludeUrl[s]
 			if !ok && !strings.EqualFold(c.Request().Header.Get("Access-Token"), cache["access_token"]) {
 				return rc.Fail(401, "Access Forbidden")
