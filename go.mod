@@ -35,4 +35,7 @@ require (
 	golang.org/x/text v0.3.6 // indirect
 )
 
-require github.com/google/uuid v1.3.0 // indirect
+require (
+	github.com/go-bindata/go-bindata v3.1.2+incompatible // indirect
+	github.com/google/uuid v1.3.0 // indirect
+)
