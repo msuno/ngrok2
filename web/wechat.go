@@ -20,6 +20,7 @@ type ReqMsg struct {
 	MsgType      string   `xml:"MsgType"`
 	Content      string   `xml:"Content"`
 	MsgId        string   `xml:"MsgId,omitempty"`
+	Event        string   `xml:"Event,omitempty"`
 }
 
 type RespMsg struct {
@@ -42,23 +43,50 @@ func postWeChat(c echo.Context) error {
 	var a ReqMsg
 	cc.Bind(&a)
 
-	var u NgrokUser
-	u.UnionId = a.FromUserName
-	u.Sk = strings.ToLower(a.FromUserName)
-	u4 := uuid.New()
-	uuid := []rune(strings.ReplaceAll(u4.String(), "-", ""))
-	u.Domain = string(uuid[0:10])
-	u.CreateTime = time.Now()
-	u.UpdateTime = time.Now()
-	_, err := cc.db.NamedExec("insert ignore into `ngrok_user`(`union_id`,`domain`,`sk`, `create_time`, `update_time`) values(:union_id,:domain,:sk,:create_time,:update_time)", u)
-	if err != nil {
-		panic(err)
+	var content string
+	if a.MsgType == "event" {
+		if a.Event == "subscribe" {
+			content = "欢迎订阅"
+			var u NgrokUser
+			err := cc.db.Get(&u, "select * from ngrok_user where union_id = ?", a.FromUserName)
+			if err != nil {
+				u.UnionId = a.FromUserName
+				u.Sk = strings.ToLower(a.FromUserName)
+				u4 := uuid.New()
+				uuid := []rune(strings.ReplaceAll(u4.String(), "-", ""))
+				u.Domain = string(uuid[0:10])
+				u.CreateTime = time.Now()
+				u.UpdateTime = time.Now()
+				_, err := cc.db.NamedExec("insert ignore into `ngrok_user`(`union_id`,`domain`,`sk`, `create_time`, `update_time`) values(:union_id,:domain,:sk,:create_time,:update_time)", u)
+				if err != nil {
+					panic(err)
+				}
+			}
+		} else {
+			content = "欢迎下次关注"
+		}
+	} else if a.MsgType == "text" {
+		switch a.Content {
+		case "我的密钥":
+			var u NgrokUser
+			err := cc.db.Get(&u, "select * from ngrok_user where union_id = ?", a.FromUserName)
+			if err == nil {
+				content = "你的密钥为：" + u.Sk + "，域名为：" + u.Domain
+			} else {
+				content = "请先关注"
+			}
+		case "内网穿透":
+			content = "下载地址：https://github.com/msuno/ngrok2/releases"
+		default:
+			content = a.Content
+		}
+
 	}
 
 	log.Info(fmt.Sprintf("%v", a))
 
 	var rs RespMsg
-	rs.Content = a.Content
+	rs.Content = content
 	rs.ToUserName = a.FromUserName
 	rs.FromUserName = a.ToUserName
 	rs.CreateTime = time.Now().Unix()
