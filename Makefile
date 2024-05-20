@@ -1,9 +1,10 @@
 .PHONY: default
 
+go-bindata = $(GOPATH)/bin
 BUILD_ENV := CGO_ENABLED=0
 
-go-bindata:
-	go get -u github.com/go-bindata/go-bindata/...
+$(go-bindata)/go-bindata:
+	go install -a github.com/jteeuwen/go-bindata/...@latest
 
 default: start client server end
 
@@ -18,11 +19,11 @@ client: deps
 
 assets: client-assets server-assets
 
-client-assets: go-bindata
-	go-bindata -pkg=assets -o=client/assets/assets.go assets/client/...
+client-assets: $(go-bindata)/go-bindata
+	$(go-bindata)/go-bindata -pkg=assets -o=client/assets/assets.go assets/client/...
 
-server-assets: go-bindata
-	go-bindata -pkg=assets -o=server/assets/assets.go assets/server/...
+server-assets: $(go-bindata)/go-bindata
+	$(go-bindata)/go-bindata -pkg=assets -o=server/assets/assets.go assets/server/...
 
 all: start deps build-windows-amd64 build-windows-386 build-linux-amd64 build-linux-386 build-darwin-amd64 end
 
@@ -57,4 +58,4 @@ end:
 	$(info 编译结束, bin目录$(GOPATH)/bin)
 
 clean:
-	rm ngrok ngrokd server/assets client/assets linux-* windows-* darwin-* -rf
+	rm $(go-bindata)/go-bindata ngrok ngrokd server/assets client/assets linux-* windows-* darwin-* -rf
