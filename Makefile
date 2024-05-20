@@ -4,7 +4,7 @@ go-bindata = $(GOPATH)/bin
 BUILD_ENV := CGO_ENABLED=0
 
 $(go-bindata)/go-bindata:
-	go install -a github.com/jteeuwen/go-bindata/...@latest
+	go get -u github.com/go-bindata/go-bindata/...
 
 default: start client server end
 
