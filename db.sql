@@ -52,4 +52,4 @@ CREATE TABLE `menu_info` (
 ) DEFAULT CHARSET UTF8 COMMENT '系统菜单'
 
 
-update users set password = md5('123456') where email = 'msuno@msuno.cn';
+update users set password = md5('test') where email = 'test@test.cn';
