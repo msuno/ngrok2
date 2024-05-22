@@ -26,20 +26,17 @@ jobs:
     - name: Build
       run: |
         export PATH=$PATH:$(go env GOPATH)/bin
-        echo $PATH
         go-bindata -pkg=assets -o=client/assets/assets.go assets/client/...
         CGO_ENABLED=0 GOARCH=amd64 GOOS=windows go build -o windows-amd64/ngrok.exe ./main/ngrok
         CGO_ENABLED=0 GOARCH=386 GOOS=windows go build -o windows-386/ngrok.exe ./main/ngrok
         CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -o linux-amd64/ngrok ./main/ngrok
         CGO_ENABLED=0 GOARCH=386 GOOS=linux go build -o linux-386/ngrok ./main/ngrok
         CGO_ENABLED=0 GOARCH=amd64 GOOS=darwin go build -o darwin-amd64/ngrok ./main/ngrok
-        CGO_ENABLED=0 GOARCH=386 GOOS=darwin go build -o darwin-386/ngrok ./main/ngrok
         tar -zcvf ngrok-windows-amd64.tar.gz windows-amd64/ngrok.exe
         tar -zcvf ngrok-windows-386.tar.gz windows-386/ngrok.exe
         tar -zcvf ngrok-linux-amd64.tar.gz linux-amd64/ngrok
         tar -zcvf ngrok-linux-386.tar.gz linux-386/ngrok
         tar -zcvf ngrok-darwin-amd64.tar.gz darwin-amd64/ngrok
-        tar -zcvf ngrok-darwin-386.tar.gz darwin-386/ngrok
 
     - name: Create Release
       id: create_release
