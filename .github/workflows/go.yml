@@ -49,18 +49,7 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: Upload Release Asset Ngrokd
-      id: upload-release-ngrokd-windows-amd64
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ./ngrokd-windows-amd64.tar.gz
-        asset_name: ngrokd-windows-amd64.tar.gz
-        asset_content_type: application/tar.gz
-
-    - name: Upload Release Asset Ngrokd
+    - name: Upload Release Asset Ngrok Win 64
       id: upload-release-ngrok-windows-amd64
       uses: actions/upload-release-asset@v1
       env:
@@ -71,18 +60,7 @@ jobs:
         asset_name: ngrok-windows-amd64.tar.gz
         asset_content_type: application/tar.gz
 
-    - name: Upload Release Asset Ngrok
-      id: upload-release-ngrokd-windows-386
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ./ngrokd-windows-386.tar.gz
-        asset_name: ngrokd-windows-386.tar.gz
-        asset_content_type: application/tar.gz
-
-    - name: Upload Release Asset Ngrok
+    - name: Upload Release Asset Ngrok Win 386
       id: upload-release-ngrok-windows-386
       uses: actions/upload-release-asset@v1
       env:
@@ -93,18 +71,7 @@ jobs:
         asset_name: ngrok-windows-386.tar.gz
         asset_content_type: application/tar.gz
 
-    - name: Upload Release Asset Ngrokd
-      id: upload-release-ngrokd-linux-amd64
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ./ngrokd-linux-amd64.tar.gz
-        asset_name: ngrokd-linux-amd64.tar.gz
-        asset_content_type: application/tar.gz
-
-    - name: Upload Release Asset Ngrokd
+    - name: Upload Release Asset Ngrok Linux 64
       id: upload-release-ngrok-linux-amd64
       uses: actions/upload-release-asset@v1
       env:
@@ -115,18 +82,7 @@ jobs:
         asset_name: ngrok-linux-amd64.tar.gz
         asset_content_type: application/tar.gz
 
-    - name: Upload Release Asset Ngrok
-      id: upload-release-ngrokd-linux-386
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ./ngrokd-linux-386.tar.gz
-        asset_name: ngrokd-linux-386.tar.gz
-        asset_content_type: application/tar.gz
-
-    - name: Upload Release Asset Ngrok
+    - name: Upload Release Asset Ngrok Linux 386
       id: upload-release-ngrok-linux-386
       uses: actions/upload-release-asset@v1
       env:
@@ -137,18 +93,7 @@ jobs:
         asset_name: ngrok-linux-386.tar.gz
         asset_content_type: application/tar.gz
 
-    - name: Upload Release Asset Ngrokd
-      id: upload-release-ngrokd-darwin-amd64
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ./ngrokd-darwin-amd64.tar.gz
-        asset_name: ngrokd-darwin-amd64.tar.gz
-        asset_content_type: application/tar.gz
-
-    - name: Upload Release Asset Ngrokd
+    - name: Upload Release Asset Ngrok Darwin 64
       id: upload-release-ngrok-darwin-amd64
       uses: actions/upload-release-asset@v1
       env:
@@ -157,26 +102,4 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
         asset_path: ./ngrok-darwin-amd64.tar.gz
         asset_name: ngrok-darwin-amd64.tar.gz
-        asset_content_type: application/tar.gz
-
-    - name: Upload Release Asset Ngrok
-      id: upload-release-ngrokd-darwin-386
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ./ngrokd-darwin-386.tar.gz
-        asset_name: ngrokd-darwin-386.tar.gz
-        asset_content_type: application/tar.gz
-
-    - name: Upload Release Asset Ngrok
-      id: upload-release-ngrok-darwin-386
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ./ngrok-darwin-386.tar.gz
-        asset_name: ngrok-darwin-386.tar.gz
         asset_content_type: application/tar.gz
