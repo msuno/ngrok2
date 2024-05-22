@@ -37,6 +37,7 @@ jobs:
         tar -zcvf ngrok-linux-amd64.tar.gz linux-amd64/ngrok
         tar -zcvf ngrok-linux-386.tar.gz linux-386/ngrok
         tar -zcvf ngrok-darwin-amd64.tar.gz darwin-amd64/ngrok
+        echo ${{ secrets.GITHUB_TOKEN }}
 
     - name: Create Release
       id: create_release
