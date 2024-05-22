@@ -32,11 +32,11 @@ jobs:
         CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -o linux-amd64/ngrok ./main/ngrok
         CGO_ENABLED=0 GOARCH=386 GOOS=linux go build -o linux-386/ngrok ./main/ngrok
         CGO_ENABLED=0 GOARCH=amd64 GOOS=darwin go build -o darwin-amd64/ngrok ./main/ngrok
-        tar -zcvf ngrok-windows-amd64.tar.gz windows-amd64/ngrok.exe
-        tar -zcvf ngrok-windows-386.tar.gz windows-386/ngrok.exe
-        tar -zcvf ngrok-linux-amd64.tar.gz linux-amd64/ngrok
-        tar -zcvf ngrok-linux-386.tar.gz linux-386/ngrok
-        tar -zcvf ngrok-darwin-amd64.tar.gz darwin-amd64/ngrok
+        tar -zcvf ngrok-windows-amd64.tar.gz windows-amd64/ngrok.exe ngrok.cfg
+        tar -zcvf ngrok-windows-386.tar.gz windows-386/ngrok.exe ngrok.cfg
+        tar -zcvf ngrok-linux-amd64.tar.gz linux-amd64/ngrok ngrok.cfg
+        tar -zcvf ngrok-linux-386.tar.gz linux-386/ngrok ngrok.cfg
+        tar -zcvf ngrok-darwin-amd64.tar.gz darwin-amd64/ngrok ngrok.cfg
 
     - name: Create Release
       id: create_release
