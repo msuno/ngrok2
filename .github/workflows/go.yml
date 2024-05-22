@@ -25,8 +25,9 @@ jobs:
 
     - name: Build
       run: |
-        export GOPATH=$(go env GOPATH)
-        $GOPATH/bin/go-bindata -pkg=assets -o=client/assets/assets.go assets/client/...
+        export PATH=$PATH:$(go env GOPATH)/bin
+        echo $PATH
+        go-bindata -pkg=assets -o=client/assets/assets.go assets/client/...
         CGO_ENABLED=0 GOARCH=amd64 GOOS=windows go build -o windows-amd64/ngrok.exe ./main/ngrok
         CGO_ENABLED=0 GOARCH=386 GOOS=windows go build -o windows-386/ngrok.exe ./main/ngrok
         CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -o linux-amd64/ngrok ./main/ngrok
