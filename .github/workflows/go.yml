@@ -25,6 +25,8 @@ jobs:
 
     - name: Build
       run: |
+        go-bindata -pkg=assets -o=client/assets/assets.go assets/client/...
+        GOARCH=amd64 GOOS=windows go build -o windows-amd64/ngrok.exe ./main/ngrok
         make all
         tar -zcvf ngrokd-windows-amd64.tar.gz windows-amd64/ngrokd.exe
         tar -zcvf ngrok-windows-amd64.tar.gz windows-amd64/ngrok.exe
